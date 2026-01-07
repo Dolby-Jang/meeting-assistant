@@ -58,11 +58,21 @@ with st.sidebar:
     
     # 2. 입력창 (기본값으로 저장된 값을 넣어줌)
     # 구글 키
-    google_api_key = st.text_input(
-        "Google API Key", 
-        value=saved_config.get('google_api_key', ''), 
-        type="password"
-    )
+    # 2. Google API Key 처리 (수정됨: Secrets 우선 확인)
+    google_api_key = None
+    
+    try:
+        # (1) 배포된 서버의 비밀 금고(Secrets)를 먼저 확인
+        google_api_key = st.secrets["GOOGLE_API_KEY"]
+        st.success("✅ 서버 키 적용됨") # 입력창 대신 성공 메시지 표시
+    except (FileNotFoundError, KeyError):
+        # (2) 금고에 없으면 -> 입력창 띄우기 (로컬 테스트용)
+        google_api_key = st.text_input(
+            "Google API Key", 
+            value=saved_config.get('google_api_key', ''), 
+            type="password"
+        )
+
     if google_api_key:
         genai.configure(api_key=google_api_key, transport="rest")
     
