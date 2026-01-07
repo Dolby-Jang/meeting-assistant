@@ -227,8 +227,9 @@ if audio_value:
 # 결과 및 전송 버튼
 if 'tasks' in st.session_state:
     st.subheader("✅ 업무 배정표")
-    edited_df = st.data_editor(pd.DataFrame(st.session_state['tasks']), use_container_width=True)
-    
+    edited_df = st.data_editor(pd.DataFrame(st.session_state['tasks']), use_container_width=True), 
+    num_rows="dynamic"
+
     st.divider()
     
     # 🌟 버튼: 페이지에 새 표 만들기
