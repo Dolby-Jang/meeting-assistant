@@ -227,8 +227,7 @@ if audio_value:
 # 결과 및 전송 버튼
 if 'tasks' in st.session_state:
     st.subheader("✅ 업무 배정표")
-    edited_df = st.data_editor(pd.DataFrame(st.session_state['tasks']), use_container_width=True), 
-    num_rows="dynamic"
+    edited_df = st.data_editor(pd.DataFrame(st.session_state['tasks']), use_container_width=True)
 
     st.divider()
     
@@ -244,7 +243,10 @@ if 'tasks' in st.session_state:
                 if new_db_id:
                     st.success("데이터베이스 생성 완료! 업무를 등록합니다...")
                     # 2. 데이터 등록
-                    final_data = edited_df.to_dict('records')
+                    if edited_df is not None:
+                        final_data = edited_df.to_dict('records')
+                    else:
+                        final_data = pd.DataFrame(st.session_state['tasks']).to_dict('records')
                     count = add_tasks_to_db(notion_token, new_db_id, final_data)
                     
                     if count > 0:
